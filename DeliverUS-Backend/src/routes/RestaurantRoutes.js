@@ -21,6 +21,15 @@ const loadFileRoutes = function (app) {
       handleValidation,
       RestaurantController.create)
 
+  app.route('/restaurants/:restaurantId/promote')
+    .patch(
+      isLoggedIn,
+      hasRole('owner'),
+      checkEntityExists(Restaurant, 'restaurantId'),
+      RestaurantMiddleware.checkRestaurantOwnership,
+      RestaurantController.promote
+    )
+
   app.route('/restaurants/:restaurantId')
     .get(
       checkEntityExists(Restaurant, 'restaurantId'),

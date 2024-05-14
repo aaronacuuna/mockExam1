@@ -14,7 +14,7 @@ export default function DeleteModal (props) {
     onRequestClose={props.onCancel}>
     <View style={styles.centeredView}>
       <View style={styles.modalView}>
-        <TextSemiBold textStyle={{ fontSize: 15 }}>Please confirm deletion</TextSemiBold>
+        <TextSemiBold textStyle={{ fontSize: 15 }}>Please confirm</TextSemiBold>
         {props.children}
         <Pressable
           onPress={props.onCancel}
