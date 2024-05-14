@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
 import React, { useContext, useEffect, useState } from 'react'
-import { StyleSheet, FlatList, Pressable, View, Text } from 'react-native'
+import { StyleSheet, FlatList, Pressable, View } from 'react-native'
 
-import { getAll, remove, update } from '../../api/RestaurantEndpoints'
+import { getAll, remove, promote } from '../../api/RestaurantEndpoints'
 import ImageCard from '../../components/ImageCard'
 import TextSemiBold from '../../components/TextSemibold'
 import TextRegular from '../../components/TextRegular'
@@ -17,9 +17,7 @@ export default function RestaurantsScreen ({ navigation, route }) {
   const [restaurants, setRestaurants] = useState([])
   const [restaurantToBeDeleted, setRestaurantToBeDeleted] = useState(null)
   const [restaurantToBePromoted, setRestaurantToBePromoted] = useState(null)
-  const [restaurantToBeDepromoted, setRestaurantToBeDepromoted] = useState(null)
   const { loggedInUser } = useContext(AuthorizationContext)
-  const {initialPromotedValue, setInitialPromotedValue} = useState({ promoted: null })
 
   useEffect(() => {
     if (loggedInUser) {
@@ -158,15 +156,9 @@ export default function RestaurantsScreen ({ navigation, route }) {
 
   const promoteRestaurant = async (restaurant) => {
     try {
-      if (restaurantToBeDepromoted !== null && restaurantToBeDepromoted !== restaurant) {
-        const value = { promoted: false }
-        await update(restaurantToBeDepromoted.id, value)
-      }
-      const value = { promoted: true }
-      await update(restaurant.id, value)
+      await promote(restaurant.id)
       await fetchRestaurants()
       setRestaurantToBePromoted(null)
-      setRestaurantToBeDepromoted(restaurant)
       showMessage({
         message: `Restaurant ${restaurant.name} succesfully promoted`,
         type: 'success',
@@ -174,7 +166,6 @@ export default function RestaurantsScreen ({ navigation, route }) {
         titleStyle: GlobalStyles.flashTextStyle
       })
     } catch (error) {
-      console.log(error)
       setRestaurantToBePromoted(null)
       showMessage({
         message: `Restaurant ${restaurant.name} could not be promoted.`,
@@ -207,8 +198,6 @@ export default function RestaurantsScreen ({ navigation, route }) {
       })
     }
   }
-
-  
 
   return (
     <>

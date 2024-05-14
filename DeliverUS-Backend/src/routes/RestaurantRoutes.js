@@ -19,6 +19,7 @@ const loadFileRoutes = function (app) {
       handleFilesUpload(['logo', 'heroImage'], process.env.RESTAURANTS_FOLDER),
       RestaurantValidation.create,
       handleValidation,
+      RestaurantMiddleware.checkNoOtherPromoted,
       RestaurantController.create)
 
   app.route('/restaurants/:restaurantId/promote')

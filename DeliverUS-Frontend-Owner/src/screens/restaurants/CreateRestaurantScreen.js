@@ -120,6 +120,12 @@ export default function CreateRestaurantScreen ({ navigation }) {
     } catch (error) {
       console.log(error)
       setBackendErrors(error.errors)
+      showMessage({
+        message: 'Restaurant could not be created',
+        type: 'error',
+        style: GlobalStyles.flashStyle,
+        titleStyle: GlobalStyles.flashTextStyle
+      })
     }
   }
   return (
@@ -180,19 +186,6 @@ export default function CreateRestaurantScreen ({ navigation }) {
               />
               <ErrorMessage name={'restaurantCategoryId'} render={msg => <TextError>{msg}</TextError> }/>
 
-              <TextRegular>.</TextRegular>
-              <Switch
-                trackColor={{ false: 'red', true: 'lawngreen' }}
-                thumbColor={values.availability ? GlobalStyles.brandSecondary : '#f4f3f4'}
-                // onValueChange={toggleSwitch}
-                value={values.promoted}
-                style={styles.switch}
-                onValueChange={value =>
-                  setFieldValue('promoted', value)
-                }
-              />
-              <TextRegular>Promoted?</TextRegular>
-
               <Pressable onPress={() =>
                 pickImage(
                   async result => {
@@ -222,6 +215,18 @@ export default function CreateRestaurantScreen ({ navigation }) {
               {backendErrors &&
                 backendErrors.map((error, index) => <TextError key={index}>{error.param}-{error.msg}</TextError>)
               }
+
+              <Switch
+                trackColor={{ false: 'red', true: 'lawngreen' }}
+                thumbColor={values.availability ? GlobalStyles.brandSecondary : '#f4f3f4'}
+                // onValueChange={toggleSwitch}
+                value={values.promoted}
+                style={styles.switch}
+                onValueChange={value =>
+                  setFieldValue('promoted', value)
+                }
+              />
+              <TextRegular>Promoted?</TextRegular>
 
               <Pressable
                 onPress={handleSubmit}

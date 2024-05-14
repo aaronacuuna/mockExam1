@@ -1,5 +1,4 @@
 import { Restaurant, Order } from '../models/models.js'
-import { Sequelize } from 'sequelize'
 
 const checkRestaurantOwnership = async (req, res, next) => {
   try {
@@ -15,14 +14,14 @@ const checkRestaurantOwnership = async (req, res, next) => {
 
 const checkNoOtherPromoted = async (req, res, next) => {
   try {
-    const restaurant = await Restaurant.findByPk(req.params.restaurantId)
+    const prom = req.body.promoted
+    const isPromoted = prom ? req.body.promoted : false
     const otherPromotedRestaurant = await Restaurant.findOne({
       where: {
-        promoted: true,
-        id: { [Sequelize.Op.ne]: restaurant.id }
+        promoted: true
       }
     })
-    if (otherPromotedRestaurant) {
+    if (otherPromotedRestaurant && isPromoted) {
       return res.status(422).send('There is already some promoted restaurant')
     }
     return next()
